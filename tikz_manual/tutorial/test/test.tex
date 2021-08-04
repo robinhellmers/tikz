@@ -1,0 +1,21 @@
+\documentclass{article}
+%\usepackage{fontspec}
+\usepackage{tikz}
+\usetikzlibrary{positioning,decorations.text}
+
+
+\begin{document}
+\begin{tikzpicture}[node distance=2cm]
+    \node (data) {Data};
+    \node [right=of data] (app) {App};
+    % Lines
+    \draw [<->] (data) -- (app) node [pos=.5, above, sloped] (TextNode) {TCP}; % works fine
+    \draw [<->] (data) to[out=90,in=90]node [pos=.5, above, sloped] (TextNode) {TCP} (app) ; % does not work
+\end{tikzpicture}
+\begin{tikzpicture}[node distance=2cm]
+    \node (data) {Data};
+    \node [right=of data] (app) {App};
+    % Lines    
+    \draw[<->,postaction={decorate,decoration={text along path,raise=1ex,text align=center,text={TCP}}}]   (data) to[out=90,in=90] (app); % does not work (causes error)
+\end{tikzpicture}
+\end{document}

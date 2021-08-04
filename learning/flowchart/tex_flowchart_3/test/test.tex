@@ -1,0 +1,109 @@
+\documentclass[crop,tikz]{standalone}% 'crop' is the default for v1.0, before it was 'preview'
+
+\usepackage{xparse}
+%\usepackage{expl3} % redundant, already loaded by xparse
+
+\usetikzlibrary{
+  graphs,
+  shapes,
+  calc,
+  intersections,
+  through,
+  fit,
+  backgrounds,
+  positioning,
+  arrows,%
+  shapes.misc,% wg. rounded rectangle
+  shapes.arrows,%
+  chains,%
+  matrix,%
+  scopes,%
+  decorations.pathmorphing,% /pgf/decoration/random steps | erste Graphik
+  shadows,%
+  fixedpointarithmetic
+}
+
+\makeatletter
+\ExplSyntaxOn
+
+% QUESTION: How can I convert these commands to treat the macro parameters like
+%           an expl3 typed parameter? can I do it while keeping the nice xparse
+%           syntax? 
+
+\DeclareDocumentCommand \@placenodelater {r() +m}{
+  \cs_new_protected:cpn {mtd@#1-save}
+   {
+    % Print Some debug information. 
+    \typeout{\pgfpositionnodelatername}
+    \typeout{\pgfpositionnodelaterminx}
+    \typeout{\pgfpositionnodelaterminy}
+    \typeout{\pgfpositionnodelatermaxx}
+    \typeout{\pgfpositionnodelatermaxy}
+    % Save Necessary Registers
+    \cs_gset_eq:cN {mtd@#1-name} \pgfpositionnodelatername
+    \cs_gset_eq:cN {mtd@#1-minx} \pgfpositionnodelaterminx
+    \cs_gset_eq:cN {mtd@#1-miny} \pgfpositionnodelaterminy
+    \cs_gset_eq:cN {mtd@#1-maxx} \pgfpositionnodelatermaxx
+    \cs_gset_eq:cN {mtd@#1-maxy} \pgfpositionnodelatermaxy
+    \box_if_exist:cF{mtd@#1-box} {\box_new:c {mtd@#1-box}}
+    \box_gset_eq:cN {mtd@#1-box} \pgfpositionnodelaterbox
+    % Calculate Length and Width as well
+    \pgfmathsetmacro{\mtd@templen}
+      {\pgfpositionnodelatermaxx - \pgfpositionnodelaterminx}
+    \pgfmathsetmacro{\mtd@tempwid}
+      {\pgfpositionnodelatermaxy - \pgfpositionnodelaterminy}
+    \cs_gset_eq:cN {mtd@#1-length} \mtd@templen
+    \cs_gset_eq:cN {mtd@#1-width} \mtd@tempwid
+  }
+  {
+    \exp_args:Nc \pgfpositionnodelater {mtd@#1-save} #2
+  }
+}
+
+% #1 = identifier for nodes already saved by \@placenodelater
+% #2 = location for the node to be placed at
+\DeclareDocumentCommand \@placenodenow {r() +m}{
+  \cs_set_eq:Nc \pgfpositionnodelatername {mtd@#1-name}
+  \cs_set_eq:Nc \pgfpositionnodelaterminx {mtd@#1-minx}
+  \cs_set_eq:Nc \pgfpositionnodelaterminy {mtd@#1-miny}
+  \cs_set_eq:Nc \pgfpositionnodelatermaxx {mtd@#1-maxx}
+  \cs_set_eq:Nc \pgfpositionnodelatermaxy {mtd@#1-maxy}
+  \box_set_eq:Nc \pgfpositionnodelaterbox {mtd@#1-box}
+  % Print Some debug information. 
+  \typeout{\pgfpositionnodelatername}
+  \typeout{\pgfpositionnodelaterminx}
+  \typeout{\pgfpositionnodelaterminy}
+  \typeout{\pgfpositionnodelatermaxx}
+  \typeout{\pgfpositionnodelatermaxy}
+  \pgfpositionnodenow{#2}
+}
+
+% #1 = Contents of upper box
+% #2 = contents of middle box
+% #3 = contents of lower box 
+\DeclareDocumentCommand \placetriple {+m +m +m}{
+
+  \@placenodelater(upper){
+    \node[anchor = south](topnode){#1};
+  }
+  \@placenodelater(lower){
+    \node[anchor = north](bottomnode){#3};
+  }
+  \pgfmathsetmacro{\mts@wa}{\use:c{mtd@upper-width} + 1cm}
+  \pgfmathsetmacro{\mts@wb}{\use:c{mtd@lower-width} + 1cm}
+  \pgfmathsetmacro{\mts@wc}{max(\mts@wa,\mts@wb)}
+  \node[minimum~width=\mts@wc](centernode){#2};
+  \@placenodenow(upper){\pgfpointanchor{centernode}{north}}
+  \@placenodenow(lower){\pgfpointanchor{centernode}{south}}
+}
+
+\ExplSyntaxOff
+\makeatother
+\begin{document}
+\begin{tikzpicture}
+  \placetriple
+    {The center box should}
+    {always be wider}
+    {than the top and bottom, regardless of content.};
+\end{tikzpicture}
+\end{document} 

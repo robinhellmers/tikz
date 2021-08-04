@@ -1,0 +1,42 @@
+\documentclass[margin=2cm]{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{intersections}
+
+\begin{document}
+\begin{tikzpicture}
+
+% Draw paths and name them
+\draw [red,name path={red line}] (0,0) -- (4,3);
+\draw [blue,name path={blue line}] (1,-.5) to[out=80,in=100] (3,2);
+
+% Name intersections and draw a line between them
+\draw [green, name intersections={of=red line and blue line,
+                                  by={first intersect, second intersect}}] 
+    (first intersect) -- (second intersect);
+
+\node at (first intersect) [above] {A};
+\node at (second intersect) [below] {B};
+
+
+
+%
+%%% Same but first a \path for naming intersections, then a draw
+%
+\begin{scope}[yshift=-5cm]
+    % Draw paths and name them
+    \draw [red,name path={red line}] (0,0) -- (4,3);
+    \draw [blue,name path={blue line}] (1,-.5) to[out=80,in=100] (3,2);
+
+    % Name intersections and draw a line between them
+    \path [green, name intersections={of=red line and blue line,
+                                    by={first intersect, second intersect}}];
+    \draw (first intersect) -- (second intersect) [green];
+    
+    \node at (first intersect) [above] {A};
+    \node at (second intersect) [below] {B};
+\end{scope}
+
+\end{tikzpicture}
+
+\end{document}

@@ -1,0 +1,161 @@
+\documentclass{article}
+
+
+\usepackage{tikz}
+\usepackage{parskip}
+
+\usetikzlibrary{positioning}
+
+
+
+\begin{document}
+
+\vspace*{-5cm}
+
+\section*{Relative positioning - Positioning Package}
+Using the \texttt{positioning} tikzpackage for relative coordinates through e.g.
+\\\texttt{[right=3*\textbackslash m cm of a]}, \texttt{[right above=1*\textbackslash m cm and 2*\textbackslash m cm of a]}, ...
+
+Scalable with user-defined variable \texttt{\textbackslash m}.
+
+Node border scales, but text remains the same. Works as long as text is not too big for the border. If so, the border will be larger and not totally by scale.
+
+\vspace{1cm}
+
+
+\def\m{1}
+\tikzstyle{my style 1} = [on grid,rectangle,minimum size=\m*20mm,inner sep=0,draw]
+
+\begin{tikzpicture}[scale=\m]
+    \draw [help lines,step=5mm,gray!20] (0,0) grid (10,10);
+
+    \node[my style 1] (a) at (0,0) [draw] {a};
+    \node[my style 1] (b) [above right=2*\m cm and 3*\m cm of a] [draw] {a-b};
+    \node[my style 1] (c) [above left=1*\m cm and 1*\m cm of b] [draw] {b-c};
+    \node[my style 1] (d) [below right=2*\m cm and 5*\m cm of c] [draw] {c-d};
+    \node[my style 1] (e) [above=6*\m cm of d] [draw] {d-e};
+    \node[my style 1] (f) [above right=8*\m cm and 2*\m cm of a] [draw] {a-f};
+\end{tikzpicture}
+
+\vspace{5mm}
+
+\def\m{0.5}
+
+\begin{tikzpicture}[scale=\m]
+    \draw [help lines,step=5mm,gray!20] (0,0) grid (10,10);
+
+    \node[my style 1] (a) at (0,0) [draw] {a};
+    \node[my style 1] (b) [above right=2*\m cm and 3*\m cm of a] [draw] {a-b};
+    \node[my style 1] (c) [above left=1*\m cm and 1*\m cm of b] [draw] {b-c};
+    \node[my style 1] (d) [below right=2*\m cm and 5*\m cm of c] [draw] {c-d};
+    \node[my style 1] (e) [above=6*\m cm of d] [draw] {d-e};
+    \node[my style 1] (f) [above right=8*\m cm and 2*\m cm of a] [draw] {a-f};
+\end{tikzpicture}
+\newpage
+
+\vspace*{-45mm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section*{Shifting \texttt{xshift} - Node border DOES scale}
+
+Scalable with user defined variable \texttt{\textbackslash ms}.
+
+Node border scales, but text remains the same. Works as long as text is not too big for the border. If so, the border will be larger and not totally by scale.
+
+
+\vspace{1cm}
+
+
+\def\ms{1}
+\tikzstyle{my style 2} = [rectangle,minimum size=20*\ms mm,inner sep=0,draw]
+
+\begin{tikzpicture}[scale=\ms]
+    \draw [help lines,step=5mm,gray!20] (0,0) grid (10,10);
+
+    \node[my style 2] (a) at (0,0) [draw] {a};
+    \node[my style 2] (b) at ([xshift=3cm, yshift=2cm]a) [draw] {a-b};
+    \node[my style 2] (c) at ([xshift=-1cm, yshift=1cm]b)[draw] {b-c};
+    \node[my style 2] (d) at ([xshift=5cm, yshift=-2cm]c) [draw] {c-d};
+    \node[my style 2] (e) at ([yshift=6cm]d) [draw] {d-e};
+    \node[my style 2] (f) at ([xshift=2cm, yshift=8cm]a) [draw] {a-f};
+\end{tikzpicture}
+
+\vspace{5mm}
+
+\def\ms{0.5}
+
+\begin{tikzpicture}[scale=\ms]
+    \draw [help lines,step=5mm,gray!20] (0,0) grid (10,10);
+
+    \node[my style 2] (a) at (0,0) [draw] {a};
+    \node[my style 2] (b) at ([xshift=3cm, yshift=2cm]a) [draw] {a-b};
+    \node[my style 2] (c) at ([xshift=-1cm, yshift=1cm]b)[draw] {b-c};
+    \node[my style 2] (d) at ([xshift=5cm, yshift=-2cm]c) [draw] {c-d};
+    \node[my style 2] (e) at ([yshift=6cm]d) [draw] {d-e};
+    \node[my style 2] (f) at ([xshift=2cm, yshift=8cm]a) [draw] {a-f};
+\end{tikzpicture}
+\newpage
+
+
+
+
+
+
+
+
+
+\vspace*{-45mm}
+
+\section*{Shifting \texttt{xshift} - Node border does NOT scale}
+
+Scalable with \texttt{scale=x}.
+
+Node border does \textbf{NOT} scale. Only scales the distances between the nodes.
+
+
+\vspace{1cm}
+
+
+\tikzstyle{my style 2} = [rectangle,minimum size=20 mm,inner sep=0,draw]
+
+\begin{tikzpicture}[scale=1]
+    \draw [help lines,step=5mm,gray!20] (0,0) grid (10,10);
+
+    \node[my style 2] (a) at (0,0) [draw] {a};
+    \node[my style 2] (b) at ([xshift=3cm, yshift=2cm]a) [draw] {a-b};
+    \node[my style 2] (c) at ([xshift=-1cm, yshift=1cm]b)[draw] {b-c};
+    \node[my style 2] (d) at ([xshift=5cm, yshift=-2cm]c) [draw] {c-d};
+    \node[my style 2] (e) at ([yshift=6cm]d) [draw] {d-e};
+    \node[my style 2] (f) at ([xshift=2cm, yshift=8cm]a) [draw] {a-f};
+\end{tikzpicture}
+
+\vspace{5mm}
+
+\begin{tikzpicture}[scale=0.5]
+    \draw [help lines,step=5mm,gray!20] (0,0) grid (10,10);
+
+    \node[my style 2] (a) at (0,0) [draw] {a};
+    \node[my style 2] (b) at ([xshift=3cm, yshift=2cm]a) [draw] {a-b};
+    \node[my style 2] (c) at ([xshift=-1cm, yshift=1cm]b)[draw] {b-c};
+    \node[my style 2] (d) at ([xshift=5cm, yshift=-2cm]c) [draw] {c-d};
+    \node[my style 2] (e) at ([yshift=6cm]d) [draw] {d-e};
+    \node[my style 2] (f) at ([xshift=2cm, yshift=8cm]a) [draw] {a-f};
+\end{tikzpicture}
+
+
+
+
+\end{document}

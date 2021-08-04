@@ -1,0 +1,26 @@
+\documentclass[margin=2cm]{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+\begin{document}
+
+\tikzset{
+    seagull/.pic=
+    {
+    \coordinate (-left wing) at (-3mm,0);
+    \coordinate (-head) at (0,0);
+    \coordinate (-right wing) at (3mm,0);
+
+    \draw [name prefix ..] (#1-left wing) to [bend left] (#1-head) to [bend left] (#1-right wing);
+    }
+}
+
+\begin{tikzpicture}
+    \pic (Emma) at (0,0) {seagull=Emma};
+    \pic (Alexandra) at (0,1) {seagull=Alexandra};
+
+    \draw (Emma-left wing) -- (Alexandra-right wing);
+\end{tikzpicture}
+
+\end{document}
